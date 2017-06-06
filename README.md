@@ -2,6 +2,9 @@
 
 This plugin provides a language switcher view helper to be used in themes.
 
+It uses [flag-icon-css](http://flag-icon-css.lip.is/) (MIT License) for flags
+icons
+
 ## Usage
 
 1. Install the plugin
