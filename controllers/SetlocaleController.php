@@ -14,6 +14,6 @@ class LocaleSwitcher_SetlocaleController extends Zend_Controller_Action
         $referer = $this->getRequest()->getHeader('Referer');
         $url = $this->getParam('redirect', $referer);
         $url = $url ?: '/';
-        $this->redirect($url);
+        $this->getHelper('Redirector')->setPrependBase(false)->goToUrl($url);
     }
 }
