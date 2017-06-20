@@ -63,7 +63,11 @@ class LocaleSwitcherPlugin extends Omeka_Plugin_AbstractPlugin
 
     public function filterLocale($value)
     {
+        // Make sure the session has been configured properly
+        Zend_Registry::get('bootstrap')->bootstrap('Session');
+
         $session = new Zend_Session_Namespace('locale');
+
         if ($session->locale) {
             return $session->locale;
         }
