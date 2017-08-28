@@ -86,5 +86,7 @@ class LocaleSwitcherPlugin extends Omeka_Plugin_AbstractPlugin
                 }
             }
         }
+
+        return $value;
     }
 }
