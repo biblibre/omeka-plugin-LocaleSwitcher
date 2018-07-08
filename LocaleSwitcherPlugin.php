@@ -17,14 +17,19 @@ class LocaleSwitcherPlugin extends Omeka_Plugin_AbstractPlugin
         'locale',
     );
 
+    protected $_options = array(
+        // The value is: serialize(array('en_US'))
+        'locale_switcher_locales' => 'a:1:{i:0;s:5:"en_US";}',
+    );
+
     public function hookInstall()
     {
-        set_option('locale_switcher_locales', serialize(array('en_US')));
+        $this->_installOptions();
     }
 
     public function hookUninstall()
     {
-        delete_option('locale_switcher_locales');
+        $this->_uninstallOptions();
     }
 
     public function hookConfig($args)
