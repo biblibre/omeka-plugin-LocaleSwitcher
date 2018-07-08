@@ -32,15 +32,42 @@ class LocaleSwitcherPlugin extends Omeka_Plugin_AbstractPlugin
         $this->_uninstallOptions();
     }
 
+    public function hookConfigForm()
+    {
+        $view = get_view();
+
+        $locales = get_option('locale_switcher_locales');
+        $locales = $locales ? unserialize($locales) : array();
+
+        $files = scandir(BASE_DIR . '/application/languages');
+        foreach ($files as $file) {
+            if (strpos($file, '.mo') !== false) {
+                $code = str_replace('.mo', '', $file);
+                $codes[$code] = locale_description($code) . " ($code)";
+            }
+        }
+        $codes['en_US'] = ucfirst( Zend_Locale::getTranslation('en_US', 'language') ) . " (en_US)";
+        asort($codes);
+
+        echo $view->partial('plugins/locale-switcher-config-form.php', array(
+            'locales' => $locales,
+            'codes' => $codes,
+        ));
+    }
+
     public function hookConfig($args)
     {
         $post = $args['post'];
-        set_option('locale_switcher_locales', serialize($post['locales']));
-    }
-
-    public function hookConfigForm()
-    {
-        include 'config_form.php';
+        foreach ($this->_options as $optionKey => $optionValue) {
+            if (isset($post[$optionKey])) {
+                switch ($optionKey) {
+                    case 'locale_switcher_locales':
+                        $post[$optionKey] = serialize($post[$optionKey]);
+                        break;
+                }
+                set_option($optionKey, $post[$optionKey]);
+            }
+        }
     }
 
     public function hookDefineRoutes($args)
