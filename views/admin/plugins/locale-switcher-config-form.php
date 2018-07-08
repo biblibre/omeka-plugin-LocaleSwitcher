@@ -1,5 +1,17 @@
 <div class="field">
     <div class="two columns alpha">
+        <?php echo $this->formLabel('locale_switcher_append_header',
+            __('Automatically append to header')); ?>
+    </div>
+    <div class="inputs five columns omega">
+        <p class="explanation"><?php echo __('If checked, the switcher will be automatically displayed via the hook "public_header", else you need to put it in your theme.'); ?></p>
+        <?php echo $this->formCheckbox('locale_switcher_append_header', true,
+            array('checked' => (boolean) get_option('locale_switcher_append_header'))); ?>
+    </div>
+</div>
+
+<div class="field">
+    <div class="two columns alpha">
         <?php echo $this->formLabel('locale_switcher_locales',
             __('Languages')); ?>
     </div>

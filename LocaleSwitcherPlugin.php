@@ -11,6 +11,7 @@ class LocaleSwitcherPlugin extends Omeka_Plugin_AbstractPlugin
         'config_form',
         'define_routes',
         'public_head',
+        'public_header',
     );
 
     public $_filters = array(
@@ -18,6 +19,7 @@ class LocaleSwitcherPlugin extends Omeka_Plugin_AbstractPlugin
     );
 
     protected $_options = array(
+        'locale_switcher_append_header' => true,
         // The value is: serialize(array('en_US'))
         'locale_switcher_locales' => 'a:1:{i:0;s:5:"en_US";}',
     );
@@ -91,6 +93,13 @@ class LocaleSwitcherPlugin extends Omeka_Plugin_AbstractPlugin
     {
         queue_css_file('locale-switcher');
         queue_css_file('flag-icon-css/css/flag-icon.min');
+    }
+
+    public function hookPublicHeader($args)
+    {
+        if (get_option('locale_switcher_append_header')) {
+            echo $args['view']->localeSwitcher();
+        }
     }
 
     public function filterLocale($value)
