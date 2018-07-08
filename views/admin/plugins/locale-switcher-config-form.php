@@ -1,6 +1,6 @@
 <p class="explanation">
     <?php echo __('Some parts of the site might not have been translated into your language yet.'); ?>
-    <?php echo __('To learn more about contributing to translations, %sread this%s.', '<a href="http://omeka.org/codex/Translate_Omeka">', '</a>.'); ?> </p>
+    <?php echo __('To learn more about contributing to translations, %sread this%s.', '<a href="https://omeka.org/codex/Translate_Omeka">', '</a>.'); ?> </p>
 </p>
 
 <fieldset id="fieldset-locale-switcher-public"><legend><?php echo __('Public front-end'); ?></legend>

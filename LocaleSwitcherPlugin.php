@@ -4,7 +4,7 @@ require_once __DIR__ . '/helpers/functions.php';
 
 class LocaleSwitcherPlugin extends Omeka_Plugin_AbstractPlugin
 {
-    public $_hooks = array(
+    protected $_hooks = array(
         'install',
         'uninstall',
         'upgrade',
@@ -16,9 +16,9 @@ class LocaleSwitcherPlugin extends Omeka_Plugin_AbstractPlugin
         'public_header',
     );
 
-    public $_filters = array(
-        'admin_navigation_global',
+    protected $_filters = array(
         'locale',
+        'admin_navigation_global',
     );
 
     protected $_options = array(
@@ -95,7 +95,6 @@ class LocaleSwitcherPlugin extends Omeka_Plugin_AbstractPlugin
     public function hookDefineRoutes($args)
     {
         $router = $args['router'];
-
         $router->addRoute(
             'locale-switcher-changelanguage',
             new Zend_Controller_Router_Route(
@@ -103,7 +102,7 @@ class LocaleSwitcherPlugin extends Omeka_Plugin_AbstractPlugin
                 array(
                     'module' => 'locale-switcher',
                     'controller' => 'setlocale',
-                    'action' => 'setlocale',
+                    'action' => 'index',
                 )
             )
         );
@@ -111,8 +110,8 @@ class LocaleSwitcherPlugin extends Omeka_Plugin_AbstractPlugin
 
     public function hookAdminHead()
     {
-        $enabled_locales = unserialize(get_option('locale_switcher_locales_admin'));
-        if ($enabled_locales) {
+        $enabledLocales = unserialize(get_option('locale_switcher_locales_admin'));
+        if ($enabledLocales) {
             queue_css_file('locale-switcher');
             queue_css_file('flag-icon-css/css/flag-icon.min');
         }
@@ -133,11 +132,11 @@ class LocaleSwitcherPlugin extends Omeka_Plugin_AbstractPlugin
 
     public function filterLocale($value)
     {
-        $enabled_locales = is_admin_theme()
+        $enabledLocales = is_admin_theme()
             ? unserialize(get_option('locale_switcher_locales_admin'))
             : unserialize(get_option('locale_switcher_locales'));
 
-        if (empty($enabled_locales)) {
+        if (empty($enabledLocales)) {
             return $value;
         }
 
@@ -146,7 +145,7 @@ class LocaleSwitcherPlugin extends Omeka_Plugin_AbstractPlugin
 
         $session = new Zend_Session_Namespace('locale');
 
-        if ($session->locale && in_array($session->locale, $enabled_locales)) {
+        if ($session->locale && in_array($session->locale, $enabledLocales)) {
             return $session->locale;
         }
 
@@ -157,7 +156,7 @@ class LocaleSwitcherPlugin extends Omeka_Plugin_AbstractPlugin
             }, explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']));
 
             foreach ($languages as $language) {
-                if (in_array($language, $enabled_locales)) {
+                if (in_array($language, $enabledLocales)) {
                     return $language;
                 }
             }
@@ -168,8 +167,8 @@ class LocaleSwitcherPlugin extends Omeka_Plugin_AbstractPlugin
 
     public function filterAdminNavigationGlobal($nav)
     {
-        $enabled_locales = unserialize(get_option('locale_switcher_locales_admin'));
-        if (empty($enabled_locales)) {
+        $enabledLocales = unserialize(get_option('locale_switcher_locales_admin'));
+        if (empty($enabledLocales)) {
             return $nav;
         }
 
@@ -177,7 +176,7 @@ class LocaleSwitcherPlugin extends Omeka_Plugin_AbstractPlugin
         $currentUrl = Zend_Controller_Front::getInstance()->getRequest()->getRequestUri();
         $view = get_view();
 
-        foreach ($enabled_locales as $locale) {
+        foreach ($enabledLocales as $locale) {
             $language = Zend_Locale::getTranslation(substr($locale, 0, 2), 'language');
             $country = $view->localeToCountry($locale);
 
