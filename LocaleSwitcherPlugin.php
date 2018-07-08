@@ -23,9 +23,9 @@ class LocaleSwitcherPlugin extends Omeka_Plugin_AbstractPlugin
 
     protected $_options = array(
         'locale_switcher_append_header' => true,
-        // The value is: serialize(array('en_US'))
-        'locale_switcher_locales' => 'a:1:{i:0;s:5:"en_US";}',
-        'locale_switcher_locales_admin' => 'a:1:{i:0;s:5:"en_US";}',
+        // The value is: serialize(array('en'))
+        'locale_switcher_locales' => 'a:1:{i:0;s:2:"en";}',
+        'locale_switcher_locales_admin' => 'a:1:{i:0;s:2:"en";}',
     );
 
     public function hookInstall()
@@ -65,7 +65,8 @@ class LocaleSwitcherPlugin extends Omeka_Plugin_AbstractPlugin
                 $codes[$code] = locale_description($code) . " ($code)";
             }
         }
-        $codes['en_US'] = ucfirst( Zend_Locale::getTranslation('en_US', 'language') ) . " (en_US)";
+        // Set default "en" and instead of "en_US" to avoid issues.
+        $codes['en'] = ucfirst(Zend_Locale::getTranslation('en', 'language')) . ' (en)';
         asort($codes);
 
         echo $view->partial('plugins/locale-switcher-config-form.php', array(
